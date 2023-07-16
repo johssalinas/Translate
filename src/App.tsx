@@ -7,6 +7,9 @@ import { ArrowsIcon } from './components/Icons'
 import { LanguageSelector } from './components/LanguageSelector'
 import { SectionType } from './types.d'
 import { TextArea } from './components/TextArea'
+import { useEffect } from 'react'
+import { translate } from './services/translate'
+import { userDebounce } from './hooks/useDebounce'
 
 function App () {
   const {
@@ -21,6 +24,22 @@ function App () {
     setFromText,
     setResult
   } = useStore()
+
+  const debounceFromText = userDebounce(fromText, 300)
+
+  useEffect(() => {
+    if (debounceFromText === '') return
+
+    translate({ fromLanguage, toLanguage, text: debounceFromText })
+      .then((res) => {
+        if (res == null) return
+        setResult(res)
+      })
+      .catch((err) => {
+        setResult(err)
+      })
+  }, [fromText, toLanguage, fromLanguage])
+
   return (
     <Container fluid>
         <h1>Google Translate Clone</h1>
