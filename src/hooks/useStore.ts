@@ -40,8 +40,8 @@ function reducer (state: State, action: Action) {
   if (type === 'SET_FROM_TEXT') {
     return {
       ...state,
-      loading: true,
       fromText: action.payload,
+      loading: action.payload !== '',
       result: ''
     }
   }
